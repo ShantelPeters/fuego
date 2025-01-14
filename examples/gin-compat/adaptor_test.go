@@ -15,7 +15,7 @@ func TestFuegoGin(t *testing.T) {
 		r := httptest.NewRequest("GET", "/gin", nil)
 		w := httptest.NewRecorder()
 
-		a.Gin.ServeHTTP(w, r)
+		a.ServeHTTP(w, r)
 
 		require.Equal(t, 200, w.Code)
 	})
@@ -24,7 +24,7 @@ func TestFuegoGin(t *testing.T) {
 		r := httptest.NewRequest("GET", "/fuego", nil)
 		w := httptest.NewRecorder()
 
-		a.Gin.ServeHTTP(w, r)
+		a.ServeHTTP(w, r)
 
 		require.Equal(t, http.StatusOK, w.Code)
 		require.JSONEq(t, `{"message":"Hello"}`, w.Body.String())

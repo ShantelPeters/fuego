@@ -10,20 +10,22 @@ import (
 )
 
 type Adaptor struct {
-	*fuego.Engine
-	Gin *gin.Engine
+	fuegoEngine *fuego.Engine
+	*gin.Engine
+}
+
+func NewAdaptor(g *gin.Engine, e *fuego.Engine) *Adaptor {
+	a := &Adaptor{Engine: g, fuegoEngine: e}
+	fuego.RegisterOpenAPIRoutes(e, a)
+	return a
 }
 
 func (a *Adaptor) SpecHandler() {
-	Get(a.Engine, a.Gin, a.OpenAPIConfig.SpecURL, a.Engine.SpecHandler())
+	Get(a.fuegoEngine, a, a.fuegoEngine.OpenAPIConfig.SpecURL, a.fuegoEngine.SpecHandler())
 }
 
 func (a *Adaptor) UIHandler() {
-	Get(a.Engine, a.Gin, a.OpenAPIConfig.SwaggerURL+"/", a.OpenAPIConfig.UIHandler(a.OpenAPIConfig.SpecURL))
-}
-
-func (a *Adaptor) URL() string {
-	panic("not implemented")
+	Get(a.fuegoEngine, a, a.fuegoEngine.OpenAPIConfig.SwaggerURL+"/", a.fuegoEngine.OpenAPIConfig.UIHandler(a.fuegoEngine.OpenAPIConfig.SpecURL))
 }
 
 func GetGin(engine *fuego.Engine, ginRouter gin.IRouter, path string, handler gin.HandlerFunc, options ...func(*fuego.BaseRoute)) *fuego.Route[any, any] {

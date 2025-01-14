@@ -29,7 +29,7 @@ func main() {
 
 	fmt.Println("OpenAPI at at http://localhost:8980/swagger ✅")
 
-	err := a.Gin.Run(":8980")
+	err := a.Run(":8980")
 	if err != nil {
 		panic(err)
 	}
@@ -81,10 +81,7 @@ func server() *fuegogin.Adaptor {
 	)
 
 	// Serve the OpenAPI spec
-	a := &fuegogin.Adaptor{Engine: engine, Gin: ginRouter}
-	fuego.RegisterOpenAPIRoutes(a.Engine, a)
-
-	return a
+	return fuegogin.NewAdaptor(ginRouter, engine)
 }
 
 func (h *HelloRequest) InTransform(ctx context.Context) error {

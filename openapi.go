@@ -82,17 +82,12 @@ func NewOpenApiSpec() openapi3.T {
 type OpenAPIServable interface {
 	SpecHandler()
 	UIHandler()
-	URL() string
 }
 
 func RegisterOpenAPIRoutes(e *Engine, o OpenAPIServable) {
 	if e.OpenAPIConfig.Disabled {
 		return
 	}
-	e.OpenAPI.Description().Servers = append(e.OpenAPI.Description().Servers, &openapi3.Server{
-		URL:         o.URL(),
-		Description: "local server",
-	})
 	o.SpecHandler()
 
 	if e.OpenAPIConfig.DisableSwaggerUI {

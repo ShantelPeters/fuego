@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"reflect"
 	"time"
+
+	"github.com/getkin/kin-openapi/openapi3"
 )
 
 // Run starts the server.
@@ -36,6 +38,10 @@ func (s *Server) setup() error {
 	if err := s.setupDefaultListener(); err != nil {
 		return err
 	}
+	s.OpenAPI.Description().Servers = append(s.OpenAPI.Description().Servers, &openapi3.Server{
+		URL:         s.URL(),
+		Description: "local server",
+	})
 	go s.OutputOpenAPISpec()
 	RegisterOpenAPIRoutes(s.Engine, s)
 	s.printStartupMessage()
