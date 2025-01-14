@@ -21,11 +21,17 @@ func NewAdaptor(g *gin.Engine, e *fuego.Engine) *Adaptor {
 }
 
 func (a *Adaptor) SpecHandler() {
-	Get(a.fuegoEngine, a, a.fuegoEngine.OpenAPIConfig.SpecURL, a.fuegoEngine.SpecHandler())
+	Get(a.fuegoEngine, a, a.fuegoEngine.OpenAPIConfig.SpecURL, a.fuegoEngine.SpecHandler(), fuego.OptionHide())
 }
 
 func (a *Adaptor) UIHandler() {
-	Get(a.fuegoEngine, a, a.fuegoEngine.OpenAPIConfig.SwaggerURL+"/", a.fuegoEngine.OpenAPIConfig.UIHandler(a.fuegoEngine.OpenAPIConfig.SpecURL))
+	GetGin(
+		a.fuegoEngine,
+		a,
+		a.fuegoEngine.OpenAPIConfig.SwaggerURL+"/",
+		gin.WrapH(a.fuegoEngine.OpenAPIConfig.UIHandler(a.fuegoEngine.OpenAPIConfig.SpecURL)),
+		fuego.OptionHide(),
+	)
 }
 
 func GetGin(engine *fuego.Engine, ginRouter gin.IRouter, path string, handler gin.HandlerFunc, options ...func(*fuego.BaseRoute)) *fuego.Route[any, any] {

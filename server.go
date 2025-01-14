@@ -145,13 +145,13 @@ func NewServer(options ...func(*Server)) *Server {
 
 // Registers the routes to serve the OpenAPI spec and Swagger UI.
 func (s *Server) SpecHandler() {
-	Get(s, s.OpenAPIConfig.SpecURL, s.Engine.SpecHandler())
-	s.printOpenAPIMessage(fmt.Sprintf("JSON spec: %s%s", s.URL(), s.OpenAPIConfig.SpecURL))
+	Get(s, s.OpenAPIConfig.SpecURL, s.Engine.SpecHandler(), OptionHide())
+	s.printOpenAPIMessage(fmt.Sprintf("JSON spec: %s%s", s.url(), s.OpenAPIConfig.SpecURL))
 }
 
 func (s *Server) UIHandler() {
-	Get(s, s.OpenAPIConfig.SwaggerURL+"/", s.OpenAPIConfig.UIHandler(s.OpenAPIConfig.SpecURL))
-	s.printOpenAPIMessage(fmt.Sprintf("OpenAPI UI: %s%s/index.html", s.URL(), s.OpenAPIConfig.SwaggerURL))
+	GetStd(s, s.OpenAPIConfig.SwaggerURL+"/", s.OpenAPIConfig.UIHandler(s.OpenAPIConfig.SpecURL).ServeHTTP, OptionHide())
+	s.printOpenAPIMessage(fmt.Sprintf("OpenAPI UI: %s%s/index.html", s.url(), s.OpenAPIConfig.SwaggerURL))
 }
 
 // WithTemplateFS sets the filesystem used to load templates.

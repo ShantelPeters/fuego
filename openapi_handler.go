@@ -1,9 +1,12 @@
 package fuego
 
-func DefaultOpenAPIHandler(specURL string) func(c ContextNoBody) (HTML, error) {
-	return func(c ContextNoBody) (HTML, error) {
-		return HTML(DefaultOpenAPIHTML(specURL)), nil
-	}
+import "net/http"
+
+func DefaultOpenAPIHandler(specURL string) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		_, _ = w.Write([]byte(DefaultOpenAPIHTML(specURL)))
+	})
 }
 
 func DefaultOpenAPIHTML(specURL string) string {

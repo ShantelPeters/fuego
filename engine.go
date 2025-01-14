@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log/slog"
+	"net/http"
 	"os"
 	"path/filepath"
 
@@ -58,7 +59,7 @@ type OpenAPIConfig struct {
 	// URL to serve the OpenAPI JSON spec
 	SpecURL string
 	// Handler to serve the OpenAPI UI from spec URL
-	UIHandler func(specURL string) func(c ContextNoBody) (HTML, error)
+	UIHandler func(specURL string) http.Handler
 	// URL to serve the swagger UI
 	SwaggerURL string
 	// If true, the server will not serve the Swagger UI
